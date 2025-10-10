@@ -52,7 +52,7 @@ func TestAddGetDelete(t *testing.T) {
 	require.Equal(t, parcel, stored)
 
 	// delete
-	err = store.Delete(parcel.Number)
+	require.NoError(t, store.Delete(parcel.Number))
 
 	stored, err = store.Get(parcel.Number)
 	require.Equal(t, sql.ErrNoRows, err)
@@ -77,14 +77,11 @@ func TestSetAddress(t *testing.T) {
 
 	// set address
 	newAddress := "new test address"
-	err = store.SetAddress(parcel.Number, newAddress)
-
-	require.NoError(t, err)
-
+	require.NoError(t, store.SetAddress(parcel.Number, newAddress))
 	// check
 	stored, err := store.Get(parcel.Number)
-
 	require.NoError(t, err)
+
 	require.Equal(t, newAddress, stored.Address)
 }
 
@@ -106,14 +103,11 @@ func TestSetStatus(t *testing.T) {
 	require.NotEmpty(t, parcel.Number)
 
 	// set status
-	err = store.SetStatus(parcel.Number, ParcelStatusSent)
-
-	require.NoError(t, err)
-
+	require.NoError(t, store.SetStatus(parcel.Number, ParcelStatusSent))
 	// check
 	stored, err := store.Get(parcel.Number)
-
 	require.NoError(t, err)
+
 	require.Equal(t, ParcelStatusSent, stored.Status)
 }
 
