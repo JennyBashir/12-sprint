@@ -54,7 +54,7 @@ func TestAddGetDelete(t *testing.T) {
 	// delete
 	require.NoError(t, store.Delete(parcel.Number))
 
-	stored, err = store.Get(parcel.Number)
+	_, err = store.Get(parcel.Number)
 	require.Equal(t, sql.ErrNoRows, err)
 }
 
@@ -118,7 +118,11 @@ func TestGetByClient(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			t.Logf("db.Close error: %v", err)
+		}
+	}()
 	store := NewParcelStore(db)
 
 	parcels := []Parcel{
