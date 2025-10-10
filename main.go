@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -102,7 +103,11 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Printf("db.Close error: %v", err)
+		}
+	}()
 
 	store := NewParcelStore(db)
 	service := NewParcelService(store)
